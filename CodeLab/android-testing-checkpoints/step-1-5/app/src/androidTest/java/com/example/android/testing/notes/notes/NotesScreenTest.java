@@ -38,6 +38,7 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
 import static android.support.test.espresso.contrib.RecyclerViewActions.scrollTo;
+import static android.support.test.espresso.contrib.RecyclerViewActions.scrollToHolder;
 import static android.support.test.espresso.matcher.ViewMatchers.hasDescendant;
 import static android.support.test.espresso.matcher.ViewMatchers.isAssignableFrom;
 import static android.support.test.espresso.matcher.ViewMatchers.isDescendantOfA;
@@ -97,17 +98,27 @@ public class NotesScreenTest {
 
     @Test
     public void clickAddNoteButton_opensAddNoteUi() throws Exception {
-        fail("Implement step 7");
-//        // Click on the add note button
-//        onView(withId(R.id.fab_add_notes)).perform(click());
-//
-//        // Check if the add note screen is displayed
-//        onView(withId(R.id.add_note_title)).check(matches(isDisplayed()));
+        // Click on the add note button
+        onView(withId(R.id.fab_add_notes)).perform(click());
+
+        // Check if the add note screen is displayed
+        onView(withId(R.id.add_note_title)).check(matches(isDisplayed()));
     }
 
     @Test
     public void addNoteToNotesList() throws Exception {
-        fail("Implement step 7");
+        String newNoteTitle = "Espresso";
+        String newNoteDescription = "UI testing for Android";
+
+        onView(withId(R.id.fab_add_notes)).perform(click());
+        onView(withId(R.id.add_note_title)).perform(typeText(newNoteTitle), closeSoftKeyboard());
+        onView(withId(R.id.add_note_description)).perform( typeText( newNoteDescription ), closeSoftKeyboard() );
+        onView(withId(R.id.fab_add_notes)).perform(click());
+        onView(withId(R.id.notes_list)).perform( scrollTo( hasDescendant( withText(newNoteDescription ))));
+        onView( (withItemText( newNoteDescription ) ) ).check( matches( isDisplayed() ) );
+
+
+
 //        String newNoteTitle = "Espresso";
 //        String newNoteDescription = "UI testing for Android";
 //
