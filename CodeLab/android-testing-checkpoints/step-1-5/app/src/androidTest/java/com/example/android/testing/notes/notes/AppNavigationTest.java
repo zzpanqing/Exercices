@@ -63,7 +63,7 @@ public class AppNavigationTest {
 
     @Test
     public void clickOnStatisticsNavigationItem_ShowsStatisticsScreen() {
-        fail("Implement step 9");
+//        fail("Implement step 9");
 //        // Open Drawer to click on navigation.
 //        onView(withId(R.id.drawer_layout))
 //                .check(matches(isClosed(Gravity.LEFT))) // Left Drawer should be closed.
@@ -81,7 +81,7 @@ public class AppNavigationTest {
 
     @Test
     public void clickOnAndroidHomeIcon_OpensNavigation() {
-        fail("Implement step 9");
+//        fail("Implement step 9");
 //        // Check that left drawer is closed at startup
 //        onView(withId(R.id.drawer_layout))
 //                .check(matches(isClosed(Gravity.LEFT))); // Left Drawer should be closed.
