@@ -41,8 +41,10 @@ import static android.support.test.espresso.action.ViewActions.closeSoftKeyboard
 import static android.support.test.espresso.action.ViewActions.scrollTo;
 import static android.support.test.espresso.action.ViewActions.typeText;
 import static android.support.test.espresso.assertion.ViewAssertions.matches;
+import static android.support.test.espresso.intent.Intents.intended;
 import static android.support.test.espresso.intent.Intents.intending;
 import static android.support.test.espresso.intent.matcher.IntentMatchers.hasAction;
+import static android.support.test.espresso.intent.matcher.IntentMatchers.hasType;
 import static android.support.test.espresso.matcher.ViewMatchers.isDisplayed;
 import static android.support.test.espresso.matcher.ViewMatchers.withId;
 import static android.support.test.espresso.matcher.ViewMatchers.withText;
@@ -84,7 +86,15 @@ public class AddNoteScreenTest {
 
     @Test
     public void addImageToNote_ShowsThumbnailInUi() {
-        fail("Implement in step 8");
+        ActivityResult response = createImageCaptureActivityResultStub();
+        intending(hasAction(MediaStore.ACTION_IMAGE_CAPTURE))
+        .respondWith(response);
+
+        onView(withId(R.id.add_note_image_thumbnail)).check(matches(not(isDisplayed())));
+        selectTakeImageFromMenu();
+        onView(withId(R.id.add_note_image_thumbnail))
+                .perform(scrollTo())
+                .check(matches(allOf(hasDrawable(), isDisplayed())));
 //        // Create an Activity Result which can be used to stub the camera Intent
 //        ActivityResult result = createImageCaptureActivityResultStub();
 //        // If there is an Intent with ACTION_IMAGE_CAPTURE, intercept the Intent and respond with
@@ -131,7 +141,7 @@ public class AddNoteScreenTest {
     /**
      * Convenience method which opens the options menu and select the take image option.
      */
-    private void selectTakeImageFromMenu() {
+    private void  selectTakeImageFromMenu() {
         openActionBarOverflowOrOptionsMenu(getTargetContext());
 
         // Click on add picture option
