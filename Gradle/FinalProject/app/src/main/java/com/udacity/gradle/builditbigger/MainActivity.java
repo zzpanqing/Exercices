@@ -4,7 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.support.v4.util.Pair;
+import android.util.Pair;
 import android.support.v7.app.ActionBarActivity;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
@@ -21,6 +21,8 @@ import com.javajokes.JavaJokes;
 import com.udacity.qingpan.libandroidjokes.ActivityJokes;
 
 import java.io.IOException;
+
+import static android.os.AsyncTask.execute;
 
 
 public class MainActivity extends AppCompatActivity implements OnTaskCompleted{
