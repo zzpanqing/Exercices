@@ -1,10 +1,12 @@
 package com.example.qing.personalizedsunshine;
 import android.Manifest;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -34,16 +36,15 @@ import java.net.HttpURLConnection;
 import java.net.MalformedURLException;
 import java.net.URL;
 import java.text.SimpleDateFormat;
-import java.util.Arrays;
 import java.util.ArrayList;
 import java.util.GregorianCalendar;
-import java.util.List;
 
 /**
  * Created by qingpan on 11/11/2016.
  */
 
 public class ForecastFragment extends Fragment {
+    private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
     public ArrayAdapter mForecastAdapter;
     final int MY_PERMISSIONS_REQUEST_INTERNET = 111;
@@ -60,24 +61,10 @@ public class ForecastFragment extends Fragment {
                              Bundle savedInstancestate){
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 
-
-        // Create some dummy data for the ListView.  Here's a sample weekly forecast
-        String[] data = {
-                "Mon 6/23 - Sunny - 31/17",
-                "Tue 6/24 - Foggy - 21/8",
-                "Wed 6/25 - Cloudy - 22/17",
-                "Thurs 6/26 - Rainy - 18/11",
-                "Fri 6/27 - Foggy - 21/10",
-                "Sat 6/28 - TRAPPED IN WEATHERSTATION - 23/18",
-                "Sun 6/29 - Sunny - 20/7"
-        };
-
-        List<String> weekForecast = new ArrayList<String>(Arrays.asList(data));
-
         mForecastAdapter = new ArrayAdapter<String>(getContext(),
                                                         R.layout.list_item_forecast,
                                                         R.id.list_item_forecast_textview,
-                                                        weekForecast);
+                                                        new ArrayList<String>());
         ListView list = (ListView) rootView.findViewById(R.id.listview_forecast);
         list.setAdapter(mForecastAdapter);
 
@@ -100,32 +87,49 @@ public class ForecastFragment extends Fragment {
 
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
-        if(item.getItemId() == R.id.action_refresh) {
-           int permissionCheck = ContextCompat.checkSelfPermission(  getActivity(),
-                                                Manifest.permission.INTERNET);
-            if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-                AsyncTask<String, Void, String[]> fetchWeather = new FetchWeatherTask();
-                fetchWeather.execute("78800");
+            switch (item.getItemId()){
+                case R.id.action_refresh:
+                    updateWeather();
+                    return true;
             }
-            else {
-                if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                        Manifest.permission.INTERNET)){
-                    // Show an explanation to the user *asynchronously* -- don't block
-                    // this thread waiting for the user's response! After the user
-                    // sees the explanation, try again to request the permission.
-                } else {
-                    // No explanation needed, we can request the permission.
-                    ActivityCompat.requestPermissions(getActivity(),
-                            new String [] {Manifest.permission.INTERNET},
-                            MY_PERMISSIONS_REQUEST_INTERNET);
-                    // MY_PERMISSIONS_REQUEST_INTERNET is an
-                    // app-defined int constant. The callback method gets the
-                    // result of the request.
-                }
-            }
-            return true;
-        }
         return super.onOptionsItemSelected(item);
+    }
+
+
+
+    private void updateWeather() {
+        int permissionCheck = ContextCompat.checkSelfPermission(  getActivity(),
+                                             Manifest.permission.INTERNET);
+        if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String defaultLocation = "78800";
+            String location = sharedPref.getString(getString(R.string.pref_location_key), defaultLocation);
+
+            AsyncTask<String, Void, String[]> fetchWeather = new FetchWeatherTask();
+            fetchWeather.execute(location);
+        }
+        else {
+            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                    Manifest.permission.INTERNET)){
+                // Show an explanation to the user *asynchronously* -- don't block
+                // this thread waiting for the user's response! After the user
+                // sees the explanation, try again to request the permission.
+            } else {
+                // No explanation needed, we can request the permission.
+                ActivityCompat.requestPermissions(getActivity(),
+                        new String [] {Manifest.permission.INTERNET},
+                        MY_PERMISSIONS_REQUEST_INTERNET);
+                // MY_PERMISSIONS_REQUEST_INTERNET is an
+                // app-defined int constant. The callback method gets the
+                // result of the request.
+            }
+        }
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        updateWeather();
     }
 
     @Override
@@ -138,7 +142,6 @@ public class ForecastFragment extends Fragment {
 
     class FetchWeatherTask extends AsyncTask<String, Void, String []>{
 
-        private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
         @Override
         protected String[] doInBackground(String... strings) {
@@ -263,6 +266,19 @@ public class ForecastFragment extends Fragment {
          * Prepare the weather high/lows for presentation
          */
         private String formatHighLows(double high, double low){
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String unitsType = sharedPref.getString( getString(R.string.pref_units_key),
+                                                                      getString(R.string.pref_units_metric ));
+
+            if(unitsType.equals(getString(R.string.pref_units_imperial)))
+            {
+                high = (high * 1.8) + 32;
+                low  = (low * 1.8) + 32;
+            } else if ( !unitsType.equals(getString(R.string.pref_units_metric) ))
+                Log.d(LOG_TAG, "Unit type not found:" + unitsType);
+
+
+
             // Fore presentation, assume the user doesn't care about tenths of degree.
             long roundedHigh = Math.round(high);
             long roundedLow = Math.round(low);
