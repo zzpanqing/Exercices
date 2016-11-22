@@ -1,6 +1,8 @@
 <resources>
     <string name="app_name">CustomizedSunshine</string>
-    <string name="action_refresh" translatable="false">Refresh</string>
     <string name="hello_world" translatable="false">Hello, world!</string>
+    <string name="action_refresh" translatable="false">Refresh</string>
     <string name="action_settings">Settings</string>
+    <!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
 </resources>
