@@ -4,6 +4,7 @@
     <string name="action_refresh" translatable="false">Refresh</string>
     <string name="action_settings">Settings</string>
     <string name="action_locate_on_map">Locate on Map</string>
+    <string name="action_share">Share</string>
 
 
 
