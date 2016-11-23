@@ -26,7 +26,7 @@ public class GridMovieFragment extends Fragment {
                              Bundle savedInstanceState) {
         GridView gridView = (GridView) inflater.inflate(R.layout.fragment_grid_movie, container, false);
 
-        String[] fakedata = {"first movies", "second movie"};
+        String[] fakedata = {"first movies", "second movie", "third", "fourth", "sixth"};
         ArrayList<String> fakeArrayList = new ArrayList<String>(Arrays.asList(fakedata));
 
         mMovieAdapter = new ArrayAdapter<String>(getContext(),
