@@ -14,8 +14,6 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 
 /**
  * A simple {@link Fragment} subclass.
@@ -23,9 +21,10 @@ import org.w3c.dom.Text;
 public class DetailFragment extends Fragment {
 
     ShareActionProvider mSharedActionProvider;
+    private static final String FORECAST_SHARE_HASHTAG = "#SunshineApp";
 
     public DetailFragment() {
-        // Required empty public constructor
+        setHasOptionsMenu(true);
     }
 
 
@@ -43,30 +42,30 @@ public class DetailFragment extends Fragment {
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
-        inflater.inflate(R.menu.detail, menu);
+        inflater.inflate(R.menu.detailfragment, menu);
 
         MenuItem item = menu.findItem(R.id.action_share);
+        // Get the provider and hold onto it to set / change the share intent
         mSharedActionProvider = (ShareActionProvider) MenuItemCompat.getActionProvider(item);
+        // attach an intent to this ShareActionProvider. You can update this at any time
+        // like when the user selects a new piece of data they might like to share
+        if(mSharedActionProvider != null)
+            mSharedActionProvider.setShareIntent(createShareForecastIntent());
+
     }
 
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        switch (item.getItemId()){
-            case R.id.action_share:
-
-                return true;
-        }
-        return super.onOptionsItemSelected(item);
-    }
-
-    private void updateShareIntent() {
+    private Intent createShareForecastIntent() {
+        Intent intent = null;
         if(mSharedActionProvider != null){
             TextView tv = (TextView) getView().findViewById(R.id.detail_text);
             String tvString = tv.getText().toString();
-            Intent intent = new Intent(Intent.ACTION_SEND);
-            intent.putExtra(Intent.EXTRA_TEXT, tvString);
-            mSharedActionProvider.setShareIntent(intent);
+            intent = new Intent(Intent.ACTION_SEND);
+            intent.addFlags(Intent.FLAG_ACTIVITY_NEW_DOCUMENT); // back icon return to this app
+                                                                // not to the app containing the intent
+            intent.setType("text/plain");
+            intent.putExtra(Intent.EXTRA_TEXT, tvString+FORECAST_SHARE_HASHTAG);
         }
+        return intent;
     }
 
 }
