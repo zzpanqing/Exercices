@@ -182,7 +182,8 @@ public class ForecastFragment extends Fragment {
                         .build();
 
                 URL url = new URL(buildUri.toString());
-                //Log.v("FetchWeatherTask.doInBa", url.toString());
+
+                Log.v("FetchWeatherTask.doInBa", url.toString());
 
                 // Create the request to OpenWeatherMap, and open the connection
                 urlConnection = (HttpURLConnection) url.openConnection();
