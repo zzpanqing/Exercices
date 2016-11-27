@@ -4,7 +4,6 @@ import android.Manifest;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.net.Uri;
-import android.os.AsyncTask;
 import android.preference.PreferenceManager;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
@@ -14,8 +13,6 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.AdapterView;
-import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
 
@@ -24,8 +21,6 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Date;
 
 /**
  * A placeholder fragment containing a simple view.
@@ -34,7 +29,8 @@ public class GridMovieFragment extends Fragment {
 
     final static String LOG_TAG = GridMovieFragment.class.getName();
     final static int MOVIES_NUM_PER_FETCH = 20;
-    final static String MOVIE_CATEGORY_POPULAR = "popular";
+    final static String MOVIE_SORT_BY_POPULAR = "popular";
+    final static String MOVIE_SORT_BY_TOP_RATED = "top_rated";
     MovieAdapter mMovieAdapter = null;
 
 
@@ -129,8 +125,8 @@ public class GridMovieFragment extends Fragment {
         return gridView;
     }
 
-    String getMoviesDBUri(String category){
-        final String THE_MOVIE_DB_BASE_URL = "http://api.themoviedb.org/3/movie/"+category+"/?";
+    String getMoviesDBUri(String sortBy){
+        final String THE_MOVIE_DB_BASE_URL = "http://api.themoviedb.org/3/movie/"+sortBy+"/?";
         final String LANGUAGE_PARAM = "language";
         final String APPID_PARAM = "api_key";
 
@@ -150,8 +146,12 @@ public class GridMovieFragment extends Fragment {
                 Manifest.permission.INTERNET);
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
 
+            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
+            String sortby = sharedPref.getString(getString(R.string.pref_sortBy_key),
+                                            getString(R.string.pref_sortBy_popular_value));
+
             new FetchList(mMoviesDBFetchListener, mJsonParser, MOVIES_NUM_PER_FETCH)
-                    .execute(getMoviesDBUri(MOVIE_CATEGORY_POPULAR));;
+                    .execute(getMoviesDBUri(sortby));
         }
         else {
             if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
