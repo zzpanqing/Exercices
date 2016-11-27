@@ -11,7 +11,7 @@ public class MovieData {
     String mPoster_path;
     boolean mAdult;
     String mOverview;
-    Date mRelease_date;
+    String mRelease_date;
     String mGenre_ids;
     String mId;
     String mOriginal_title;

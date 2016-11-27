@@ -85,6 +85,9 @@ class FetchList extends AsyncTask<String, Void, Object[]> {
         } catch (JSONException iE) {
             Log.e(LOG_TAG, "extractData from json throw an exception" + iE.getMessage());
         }
+        finally {
+
+        }
 
 
         return null;

@@ -34,7 +34,7 @@ public class GridMovieFragment extends Fragment {
     final static String LOG_TAG = GridMovieFragment.class.getName();
     final static int MOVIES_NUM_PER_FETCH = 20;
     final static String MOVIE_CATEGORY_POPULAR = "popular";
-    ArrayAdapter mMovieAdapter = null;
+    MovieAdapter mMovieAdapter = null;
 
 
     JsonParser mJsonParser = new JsonParser() {
@@ -64,20 +64,23 @@ public class GridMovieFragment extends Fragment {
             MovieData[] movieDatas = new MovieData[MOVIES_NUM_PER_FETCH];
             for(int i = 0; i<movieArray.length(); ++i){
                 JSONObject movie = movieArray.getJSONObject(i);
-                movieDatas[i].mPoster_path = movie.getString(TMDB_POSTER_PATH);
-                movieDatas[i].mAdult = movie.getBoolean(TMDB_ADULT);
-                movieDatas[i].mOverview = movie.getString(TMDB_OVERVIEW);
-                movieDatas[i].mRelease_date = new Date(movie.getString(TMDB_RELEASE_DATE)); // TODO
-                movieDatas[i].mGenre_ids = movie.getString(TMDB_GENRE_IDS);
-                movieDatas[i].mId = movie.getString(TMDB_ID);
-                movieDatas[i].mOriginal_title = movie.getString(TMDB_ORIGINAL_TITLE);
-                movieDatas[i].mOriginal_language = movie.getString(TMDB_ORIGINAL_LANGUAGE);
-                movieDatas[i].mTitle = movie.getString(TMDB_TITLE);
-                movieDatas[i].mBackdrop_path = movie.getString(TMDB_BACKDROP_PATH);
-                movieDatas[i].mPopularity = movie.getDouble(TMDB_POPULARITY);
-                movieDatas[i].mVote_count = movie.getInt(TMDB_VOTE_COUNT);
-                movieDatas[i].mVideo = movie.getString(TMDB_VIDEO);
-                movieDatas[i].mVote_average = movie.getDouble(TMDB_VOTE_AVERAGE);
+                MovieData movieData = new MovieData();
+                movieData.mPoster_path = movie.getString(TMDB_POSTER_PATH);
+                movieData.mAdult = movie.getBoolean(TMDB_ADULT);
+                movieData.mOverview = movie.getString(TMDB_OVERVIEW);
+                String StrDate = movie.getString(TMDB_RELEASE_DATE);
+                movieData.mRelease_date = StrDate; // TODO use  DateFormat.parse(String s)
+                movieData.mGenre_ids = movie.getString(TMDB_GENRE_IDS);
+                movieData.mId = movie.getString(TMDB_ID);
+                movieData.mOriginal_title = movie.getString(TMDB_ORIGINAL_TITLE);
+                movieData.mOriginal_language = movie.getString(TMDB_ORIGINAL_LANGUAGE);
+                movieData.mTitle = movie.getString(TMDB_TITLE);
+                movieData.mBackdrop_path = movie.getString(TMDB_BACKDROP_PATH);
+                movieData.mPopularity = movie.getDouble(TMDB_POPULARITY);
+                movieData.mVote_count = movie.getInt(TMDB_VOTE_COUNT);
+                movieData.mVideo = movie.getString(TMDB_VIDEO);
+                movieData.mVote_average = movie.getDouble(TMDB_VOTE_AVERAGE);
+                movieDatas[i] = movieData;
             }
 
             return movieDatas;
@@ -97,13 +100,10 @@ public class GridMovieFragment extends Fragment {
                 Toast.makeText(getContext(), "no movie data", Toast.LENGTH_SHORT);
                 return;
             }
-            String[] movieTitles = new String[ret.length];
-            for(int i= 0; i<ret.length; ++i){
-                movieTitles[i] = ((MovieData)ret[i]).mTitle;
-            }
 
             mMovieAdapter.clear();
-            mMovieAdapter.addAll(movieTitles);
+            mMovieAdapter.addAll((MovieData[]) ret);
+
         }
     };
     public GridMovieFragment() {
@@ -112,15 +112,13 @@ public class GridMovieFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+
         GridView gridView = (GridView) inflater.inflate(R.layout.fragment_grid_movie, container, false);
 
-        String[] fakedata = {"first movies", "second movie", "third", "fourth", "sixth"};
-        ArrayList<String> fakeArrayList = new ArrayList<String>(Arrays.asList(fakedata));
-
-        mMovieAdapter = new ArrayAdapter<String>(getContext(),
+        mMovieAdapter = new MovieAdapter(getContext(),
                 R.layout.item_movie,
-                R.id.description,
-                fakeArrayList);
+                R.id.image_title,
+                new ArrayList<MovieData>());
 
         gridView.setAdapter(mMovieAdapter);
 
