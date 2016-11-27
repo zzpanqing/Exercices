@@ -25,6 +25,7 @@
         android:id="@+id/image_title"
         app:layout_constraintRight_toRightOf="@+id/posterImage"
         app:layout_constraintLeft_toLeftOf="@+id/posterImage"
-        app:layout_constraintBottom_toBottomOf="@+id/posterImage" />
+        app:layout_constraintBottom_toBottomOf="@+id/posterImage"
+        app:layout_constraintTop_toBottomOf="parent" />
 
 </android.support.constraint.ConstraintLayout>
