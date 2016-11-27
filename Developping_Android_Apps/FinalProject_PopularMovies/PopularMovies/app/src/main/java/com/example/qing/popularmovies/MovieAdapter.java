@@ -1,11 +1,13 @@
 package com.example.qing.popularmovies;
 
 import android.content.Context;
+import android.content.Intent;
 import android.support.annotation.NonNull;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
 import android.widget.TextView;
@@ -26,11 +28,32 @@ import java.util.List;
 
 public class MovieAdapter extends ArrayAdapter<MovieData> {
     private final static String LOG_TAG = MovieAdapter.class.getName();
-    final static String TheMovieDBConfigFakeJsonStr = "{\"images\":{\"base_url\":\"http://image.tmdb.org/t/p/\",\"secure_base_url\":\"https://image.tmdb.org/t/p/\",\"backdrop_sizes\":[\"w300\",\"w780\",\"w1280\",\"original\"],\"logo_sizes\":[\"w45\",\"w92\",\"w154\",\"w185\",\"w300\",\"w500\",\"original\"],\"poster_sizes\":[\"w92\",\"w154\",\"w185\",\"w342\",\"w500\",\"w780\",\"original\"],\"profile_sizes\":[\"w45\",\"w185\",\"h632\",\"original\"],\"still_sizes\":[\"w92\",\"w185\",\"w300\",\"original\"]},\"change_keys\":[\"adult\",\"air_date\",\"also_known_as\",\"alternative_titles\",\"biography\",\"birthday\",\"budget\",\"cast\",\"certifications\",\"character_names\",\"created_by\",\"crew\",\"deathday\",\"episode\",\"episode_number\",\"episode_run_time\",\"freebase_id\",\"freebase_mid\",\"general\",\"genres\",\"guest_stars\",\"homepage\",\"images\",\"imdb_id\",\"languages\",\"name\",\"network\",\"origin_country\",\"original_name\",\"original_title\",\"overview\",\"parts\",\"place_of_birth\",\"plot_keywords\",\"production_code\",\"production_companies\",\"production_countries\",\"releases\",\"revenue\",\"runtime\",\"season\",\"season_number\",\"season_regular\",\"spoken_languages\",\"status\",\"tagline\",\"title\",\"translations\",\"tvdb_id\",\"tvrage_id\",\"type\",\"video\",\"videos\"]}";
-    static String ImagesBaseUrl; // to do read from file
-    static String ImageSize;
-    static String RealImagesBaseUrl;
-    ArrayList<MovieData> mMovieDatasList;
+    private final static String TheMovieDBConfigFakeJsonStr = "{\"images\":{\"base_url\":\"http://image.tmdb.org/t/p/\",\"secure_base_url\":\"https://image.tmdb.org/t/p/\",\"backdrop_sizes\":[\"w300\",\"w780\",\"w1280\",\"original\"],\"logo_sizes\":[\"w45\",\"w92\",\"w154\",\"w185\",\"w300\",\"w500\",\"original\"],\"poster_sizes\":[\"w92\",\"w154\",\"w185\",\"w342\",\"w500\",\"w780\",\"original\"],\"profile_sizes\":[\"w45\",\"w185\",\"h632\",\"original\"],\"still_sizes\":[\"w92\",\"w185\",\"w300\",\"original\"]},\"change_keys\":[\"adult\",\"air_date\",\"also_known_as\",\"alternative_titles\",\"biography\",\"birthday\",\"budget\",\"cast\",\"certifications\",\"character_names\",\"created_by\",\"crew\",\"deathday\",\"episode\",\"episode_number\",\"episode_run_time\",\"freebase_id\",\"freebase_mid\",\"general\",\"genres\",\"guest_stars\",\"homepage\",\"images\",\"imdb_id\",\"languages\",\"name\",\"network\",\"origin_country\",\"original_name\",\"original_title\",\"overview\",\"parts\",\"place_of_birth\",\"plot_keywords\",\"production_code\",\"production_companies\",\"production_countries\",\"releases\",\"revenue\",\"runtime\",\"season\",\"season_number\",\"season_regular\",\"spoken_languages\",\"status\",\"tagline\",\"title\",\"translations\",\"tvdb_id\",\"tvrage_id\",\"type\",\"video\",\"videos\"]}";
+    private static String ImagesBaseUrl; // to do read from file
+    private static String ImageSize;
+    private static String RealImagesBaseUrl;
+    private ArrayList<MovieData> mMovieDatasList;
+    public final static String PARAM_MOVIE_TITLE = "movie_title";
+    public final static String PARAM_POSTER_URL = "movie_poster_url";
+    public final static String PARAM_OVERVIEW = "movie_overview";
+    public final static String PARAM_USER_RATING = "user_rating";
+    public final static String PARAM_RELEASE_DATE = "release_date";
+
+    public AdapterView.OnItemClickListener mItemClickListener = new AdapterView.OnItemClickListener() {
+        @Override
+        public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
+            Intent detailIntent = new Intent(getContext(), DetailActivity.class);
+            MovieData item = mMovieDatasList.get(i);
+            detailIntent.putExtra(PARAM_MOVIE_TITLE, item.mTitle);
+            detailIntent.putExtra(PARAM_POSTER_URL, buildImageUrl(item.mPoster_path));
+            detailIntent.putExtra(PARAM_OVERVIEW, item.mOverview);
+            detailIntent.putExtra(PARAM_USER_RATING, item.mVote_average);
+            detailIntent.putExtra(PARAM_RELEASE_DATE, item.mRelease_date);
+            getContext().startActivity(detailIntent);
+        }
+    };
+
+
     public MovieAdapter(Context context, int resource, int textViewResourceId, List<MovieData> objects) {
         super(context, resource, textViewResourceId, objects);
 

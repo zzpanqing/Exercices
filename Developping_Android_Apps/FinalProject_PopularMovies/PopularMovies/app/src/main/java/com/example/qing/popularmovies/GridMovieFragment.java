@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.GridView;
 import android.widget.Toast;
@@ -121,6 +122,7 @@ public class GridMovieFragment extends Fragment {
                 new ArrayList<MovieData>());
 
         gridView.setAdapter(mMovieAdapter);
+        gridView.setOnItemClickListener(mMovieAdapter.mItemClickListener);
 
         updateMoviesList();
 
