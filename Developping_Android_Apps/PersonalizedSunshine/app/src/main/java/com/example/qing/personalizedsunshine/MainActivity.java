@@ -16,6 +16,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.v(LOG_TAG, "onCreate is called");
         setContentView(R.layout.activity_main);
 
         if(savedInstanceState == null){
@@ -25,6 +26,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    @Override
+    protected void onStart() {
+        Log.v(LOG_TAG, "onStart is called");
+        super.onStart();
+    }
+
+    @Override
+    protected void onStop() {
+        Log.v(LOG_TAG, "onStop is called");
+        super.onStop();
+    }
+
+    @Override
+    protected void onPause() {
+        Log.v(LOG_TAG, "onPause is called");
+        super.onPause();
+    }
+
+    @Override
+    protected void onResume() {
+        Log.v(LOG_TAG, "onResume is called");
+        super.onResume();
+    }
+
+    @Override
+    protected void onDestroy() {
+        Log.v(LOG_TAG, "onDestroy is called");
+        super.onDestroy();
+    }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
