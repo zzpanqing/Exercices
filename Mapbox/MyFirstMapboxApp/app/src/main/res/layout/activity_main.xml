@@ -13,8 +13,8 @@
     xmlns:mapbox="http://schemas.android.com/apk/res-auto">
 
     <com.mapbox.mapboxsdk.maps.MapView
-        mapbox:center_latitude="41.885"
-        mapbox:center_longitude="-87.679"
+        mapbox:center_latitude="48.876941"
+        mapbox:center_longitude="2.333619"
         mapbox:style_url="@string/style_mapbox_streets"
         mapbox:tilt="20"
         mapbox:zoom="12"
