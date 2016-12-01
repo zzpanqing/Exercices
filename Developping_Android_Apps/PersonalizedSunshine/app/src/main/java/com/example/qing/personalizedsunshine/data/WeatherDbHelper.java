@@ -18,6 +18,7 @@ package com.example.qing.personalizedsunshine.data;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import com.example.qing.personalizedsunshine.data.WeatherContract.LocationEntry;
 import com.example.qing.personalizedsunshine.data.WeatherContract.WeatherEntry;
@@ -31,6 +32,7 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
     private static final int DATABASE_VERSION = 2;
 
     static final String DATABASE_NAME = "weather.db";
+    private static final String LOG_TAG = WeatherDbHelper.class.getName();
 
     public WeatherDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -38,6 +40,16 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        final String SQL_CREATE_LOCATION_TABLE = "CREATE TABLE " + LocationEntry.TABLE_NAME + " (" +
+                LocationEntry._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                LocationEntry.COLUMN_CITY_NAME + "  TEXT NOT NULL, " +
+                LocationEntry.COLUMN_LOCATION_SETTING + " TEXT UNIQUE NOT NULL, " + // avoid that location setting has multiple ids
+                LocationEntry.COLUMN_COORD_LAT + " REAL NOT NULL, " +
+                LocationEntry.COLUMN_COORD_LONG + " REAL NOT NULL );";
+
+        Log.v(LOG_TAG, SQL_CREATE_LOCATION_TABLE);
+        sqLiteDatabase.execSQL(SQL_CREATE_LOCATION_TABLE);
+
         final String SQL_CREATE_WEATHER_TABLE = "CREATE TABLE " + WeatherEntry.TABLE_NAME + " (" +
                 // Why AutoIncrement here, and not above?
                 // Unique keys will be auto-generated in either case.  But for weather
@@ -70,6 +82,9 @@ public class WeatherDbHelper extends SQLiteOpenHelper {
                 WeatherEntry.COLUMN_LOC_KEY + ") ON CONFLICT REPLACE);";
 
         sqLiteDatabase.execSQL(SQL_CREATE_WEATHER_TABLE);
+
+
+
     }
 
     @Override

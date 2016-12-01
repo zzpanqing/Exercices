@@ -46,11 +46,11 @@ public class  WeatherContract {
         public static final String COLUMN_LOCATION_SETTING = "location_setting";
         // Human readable location string, provided by the API.  Because for styling,
         // "Mountain View" is more recognizable than 94043.
-        public static final String COLUMN_NAME = "city_name";
+        public static final String COLUMN_CITY_NAME = "city_name";
         // In order to uniquely pinpoint the location on the map when we launch the
         // map intent, we store the latitude and longitude as returned by openweathermap.
-        public static final String COLUMN_LAT = "lat";
-        public static final String COLUMN_LONG = "long";
+        public static final String COLUMN_COORD_LAT = "lat";
+        public static final String COLUMN_COORD_LONG = "long";
 
 
     }
