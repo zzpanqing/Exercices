@@ -16,7 +16,7 @@ public class MainActivity extends AppCompatActivity {
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.v(LOG_TAG, "onCreate is called");
+        Log.i(LOG_TAG, "onCreate is called");
         setContentView(R.layout.activity_main);
 
         if(savedInstanceState == null){
@@ -34,25 +34,25 @@ public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onStop() {
-        Log.v(LOG_TAG, "onStop is called");
+        Log.i(LOG_TAG, "onStop is called");
         super.onStop();
     }
 
     @Override
     protected void onPause() {
-        Log.v(LOG_TAG, "onPause is called");
+        Log.i(LOG_TAG, "onPause is called");
         super.onPause();
     }
 
     @Override
     protected void onResume() {
-        Log.v(LOG_TAG, "onResume is called");
+        Log.i(LOG_TAG, "onResume is called");
         super.onResume();
     }
 
     @Override
     protected void onDestroy() {
-        Log.v(LOG_TAG, "onDestroy is called");
+        Log.i(LOG_TAG, "onDestroy is called");
         super.onDestroy();
     }
 
@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity {
         if (intent.resolveActivity(getPackageManager()) != null) {
             startActivity(intent);
         }else {
-            Log.d(LOG_TAG, "Couldn't call " + location + ", no receiving apps installed!");
+            Log.i(LOG_TAG, "Couldn't call " + location + ", no receiving apps installed!");
         }
     }
 }

@@ -25,6 +25,7 @@ import android.database.sqlite.SQLiteDatabase;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.preference.PreferenceManager;
+import android.support.v4.content.ContentResolverCompat;
 import android.text.format.Time;
 import android.util.Log;
 import android.widget.ArrayAdapter;
@@ -135,26 +136,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
         return location_ID;
     }
 
-//    /*
-//        Students: This code will allow the FetchWeatherTask to continue to return the strings that
-//        the UX expects so that we can continue to test the application even once we begin using
-//        the database.
-//     */
-//    String[] convertContentValuesToUXFormat(Vector<ContentValues> cvv) {
-//        // return strings to keep UI functional for now
-//        String[] resultStrs = new String[cvv.size()];
-//        for ( int i = 0; i < cvv.size(); i++ ) {
-//            ContentValues weatherValues = cvv.elementAt(i);
-//            String highAndLow = formatHighLows(
-//                    weatherValues.getAsDouble(WeatherContract.WeatherEntry.COLUMN_MAX_TEMP),
-//                    weatherValues.getAsDouble(WeatherContract.WeatherEntry.COLUMN_MIN_TEMP));
-//            resultStrs[i] = getReadableDateString(
-//                    weatherValues.getAsLong(WeatherContract.WeatherEntry.COLUMN_DATE)) +
-//                    " - " + weatherValues.getAsString(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC) +
-//                    " - " + highAndLow;
-//        }
-//        return resultStrs;
-//    }
+
 
     /**
      * Take the String representing the complete forecast in JSON Format and
@@ -206,8 +188,9 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
             String cityName = cityJson.getString(OWM_CITY_NAME);
 
-            double cityLatitude = cityJson.getDouble(OWM_LATITUDE);
-            double cityLongitude = cityJson.getDouble(OWM_LONGITUDE);
+            JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
+            double cityLatitude  = cityCoord != null ? cityCoord.getDouble(OWM_LATITUDE) : cityJson.getDouble(OWM_LATITUDE);
+            double cityLongitude = cityCoord != null ? cityCoord.getDouble(OWM_LONGITUDE) : cityJson.getDouble(OWM_LONGITUDE);
 
             long locationId = addLocation(locationSetting, cityName, cityLatitude, cityLongitude);
 
@@ -282,6 +265,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 weatherValues.put(WeatherContract.WeatherEntry.COLUMN_SHORT_DESC, description);
                 weatherValues.put(WeatherContract.WeatherEntry.COLUMN_WEATHER_ID, weatherId);
 
+                //mContext.getContentResolver().insert(WeatherContract.WeatherEntry.CONTENT_URI, weatherValues);
                 cVVector.add(weatherValues);
             }
             int inserted = 0;
@@ -293,7 +277,23 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
                 inserted = mContext.getContentResolver().bulkInsert(WeatherContract.WeatherEntry.CONTENT_URI, a);
             }
 
-            Log.d(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
+            Log.i(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
+
+//            String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+//            Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+//                    locationSetting, System.currentTimeMillis());
+//            Cursor c = mContext.getContentResolver().query(weatherForLocationUri,
+//                    ForecastFragment.FORECAST_COLUMNS,
+//                    null,
+//                    null,
+//                    sortOrder);
+//
+////            ContentResolverCompat.query(mContext.getContentResolver(),
+////                    weatherForLocationUri, ForecastFragment.FORECAST_COLUMNS,
+////                    null, null, sortOrder, );
+//            int count = c.getCount();
+//            Log.i(LOG_TAG, "cursor has "+ count + " records");
+//            mContext.getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
 
 
         } catch (JSONException e) {
@@ -304,7 +304,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
     @Override
     protected Void doInBackground(String... params) {
-        Log.d("test", "test");
         // If there's no zip code, there's nothing to look up.  Verify size of params.
         if (params.length == 0) {
             return null;

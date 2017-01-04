@@ -28,7 +28,7 @@
             android:label="@string/title_activity_settings">
         </activity>
         <provider
-            android:authorities="com.example.android.sunshine.app"
+            android:authorities="com.example.android.customizedSunshine.app"
             android:name=".data.WeatherProvider"/>
 
 </application>
