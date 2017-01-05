@@ -188,7 +188,7 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
             JSONObject cityJson = forecastJson.getJSONObject(OWM_CITY);
             String cityName = cityJson.getString(OWM_CITY_NAME);
 
-            JSONObject cityCoord = cityJson.getJSONObject(OWM_COORD);
+            JSONObject cityCoord = cityJson.has(OWM_COORD) ? cityJson.getJSONObject(OWM_COORD) : null;
             double cityLatitude  = cityCoord != null ? cityCoord.getDouble(OWM_LATITUDE) : cityJson.getDouble(OWM_LATITUDE);
             double cityLongitude = cityCoord != null ? cityCoord.getDouble(OWM_LONGITUDE) : cityJson.getDouble(OWM_LONGITUDE);
 
@@ -279,21 +279,6 @@ public class FetchWeatherTask extends AsyncTask<String, Void, Void> {
 
             Log.i(LOG_TAG, "FetchWeatherTask Complete. " + inserted + " Inserted");
 
-//            String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
-//            Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
-//                    locationSetting, System.currentTimeMillis());
-//            Cursor c = mContext.getContentResolver().query(weatherForLocationUri,
-//                    ForecastFragment.FORECAST_COLUMNS,
-//                    null,
-//                    null,
-//                    sortOrder);
-//
-////            ContentResolverCompat.query(mContext.getContentResolver(),
-////                    weatherForLocationUri, ForecastFragment.FORECAST_COLUMNS,
-////                    null, null, sortOrder, );
-//            int count = c.getCount();
-//            Log.i(LOG_TAG, "cursor has "+ count + " records");
-//            mContext.getContentResolver().notifyChange(WeatherContract.WeatherEntry.CONTENT_URI, null);
 
 
         } catch (JSONException e) {

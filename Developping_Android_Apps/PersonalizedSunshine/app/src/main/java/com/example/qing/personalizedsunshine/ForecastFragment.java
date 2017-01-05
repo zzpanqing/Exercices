@@ -140,8 +140,9 @@ public class  ForecastFragment extends Fragment
                                              Manifest.permission.INTERNET);
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
             SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String defaultLocation = "78800";
-            String location = sharedPref.getString(getString(R.string.pref_location_key), defaultLocation);
+            String location = sharedPref.getString(
+                    getString(R.string.pref_location_key),
+                    getString(R.string.pref_location_default));
 
             AsyncTask<String, Void, Void> fetchWeather = new FetchWeatherTask(getContext());
             fetchWeather.execute(location);
@@ -201,8 +202,21 @@ public class  ForecastFragment extends Fragment
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        int count = data.getCount();
-        Log.i(LOG_TAG, ""+count+" rows");
+        String locationSetting = Utility.getPreferredLocation(getActivity());
+
+        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
+        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
+                locationSetting, System.currentTimeMillis());
+
+
+        Cursor c = getContext().getContentResolver().query(weatherForLocationUri,
+                null,
+                null,
+                null,
+                sortOrder);
+
+        int count = c.getCount();
+        Log.i(LOG_TAG, "cursor has "+ count + " records");
 
         mForecastAdapter.swapCursor(data);
     }
