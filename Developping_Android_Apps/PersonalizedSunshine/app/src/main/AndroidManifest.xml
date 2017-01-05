@@ -38,7 +38,10 @@
             android:name=".data.WeatherProvider"
             android:exported="true"
             android:permission="com.example.qing.personalizedsunshine.LICENSE_TO_KILL"/>
-</application>
+    <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="1e479fa51df47d195e0c1a69a611d0006923215b" />
+    </application>
 
 
 </manifest>
