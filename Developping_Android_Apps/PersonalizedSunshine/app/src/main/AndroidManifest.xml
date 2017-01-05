@@ -5,6 +5,12 @@
 
     <uses-permission android:name="android.permission.INTERNET"/>
 
+    <permission
+        android:name="com.example.qing.personalizedsunshine.LICENSE_TO_KILL"
+        android:protectionLevel="dangerous"
+        android:label="Licenced to kill">
+    </permission>
+
     <application
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
@@ -29,8 +35,10 @@
         </activity>
         <provider
             android:authorities="com.example.android.customizedSunshine.app"
-            android:name=".data.WeatherProvider"/>
-
+            android:name=".data.WeatherProvider"
+            android:exported="true"
+            android:permission="com.example.qing.personalizedsunshine.LICENSE_TO_KILL"/>
 </application>
+
 
 </manifest>

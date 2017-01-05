@@ -109,12 +109,17 @@ public class  ForecastFragment extends Fragment
         list.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             @Override
             public void onItemClick(AdapterView<?> adapterView, View view, int i, long l) {
-                String detailString = (String) mForecastAdapter.getItem(i);
-                Toast.makeText(getContext(), detailString,Toast.LENGTH_LONG).show();
-
-                Intent detailIntent = new Intent(getContext(), DetailActivity.class);
-                detailIntent.putExtra(Intent.EXTRA_TEXT, detailString);
-                startActivity(detailIntent);
+                // CursorAdapter returns a cursor at the correct position for getItem(), or null
+                // if it cannot seek to that position.
+                Cursor cursor = (Cursor) adapterView.getItemAtPosition(i);
+                if(cursor != null){
+                    String locationSetting = Utility.getPreferredLocation(getActivity());
+                    Intent intent = new Intent(getActivity(), DetailActivity.class)
+                            .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                                    locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                            ));
+                    startActivity(intent);
+                }
             }
         });
 
@@ -165,11 +170,16 @@ public class  ForecastFragment extends Fragment
         }
     }
 
-    @Override
-    public void onStart() {
-        super.onStart();
-        updateWeather();
-    }
+    /**
+     * Remove onStart
+     * Now that we have a database, we don’t have to constantly talk to the network
+     * and fetch the weather. But if you look at onStart from ForecastFragment, you'll
+     * see every time it's called, it downloads data from Open Weather Map. This means
+     * every time you rotate the device, you'll be attempting to connect to
+     * Open Weather Map. In Lesson 6 we’ll show you how to schedule updates in the
+     * background, but for now let’s save on network bandwidth and battery by deleting
+     * onStart. You can use the “refresh” menu item to get new weather data.
+     */
 
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
@@ -202,29 +212,17 @@ public class  ForecastFragment extends Fragment
 
     @Override
     public void onLoadFinished(android.support.v4.content.Loader<Cursor> loader, Cursor data) {
-        String locationSetting = Utility.getPreferredLocation(getActivity());
-
-        String sortOrder = WeatherContract.WeatherEntry.COLUMN_DATE + " ASC";
-        Uri weatherForLocationUri = WeatherContract.WeatherEntry.buildWeatherLocationWithStartDate(
-                locationSetting, System.currentTimeMillis());
-
-
-        Cursor c = getContext().getContentResolver().query(weatherForLocationUri,
-                null,
-                null,
-                null,
-                sortOrder);
-
-        int count = c.getCount();
-        Log.i(LOG_TAG, "cursor has "+ count + " records");
-
         mForecastAdapter.swapCursor(data);
     }
 
     @Override
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
-
         mForecastAdapter.swapCursor(null);
+    }
+
+    public void onLocationChanged(){
+        updateWeather();
+        getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
 
