@@ -26,7 +26,7 @@ public class MainActivity extends AppCompatActivity {
         Log.i(LOG_TAG, "onCreate is called");
         setContentView(R.layout.activity_main);
 
-        mLocation = Utility.getPreferredLocation(this);
+        mLocation = "";//Utility.getPreferredLocation(this);
         if(savedInstanceState == null){
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.activity_main, new ForecastFragment(), FORECASTFRAGMENT_TAG)
