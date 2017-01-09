@@ -46,7 +46,10 @@ public class DetailFragment extends Fragment
             WeatherContract.WeatherEntry.COLUMN_MIN_TEMP,
             WeatherContract.WeatherEntry.COLUMN_PRESSURE,
             WeatherContract.WeatherEntry.COLUMN_SHORT_DESC,
-            WeatherContract.WeatherEntry.COLUMN_WIND_SPEED
+            WeatherContract.WeatherEntry.COLUMN_WIND_SPEED,
+            // This works because the WeatherProvider returns location data joined with
+            // weather data, even though they're stored in two different tables.
+            WeatherContract.WeatherEntry.COLUMN_WEATHER_ID
     };
 
     static final int COL_WEATHER_ID = 0;
@@ -59,6 +62,8 @@ public class DetailFragment extends Fragment
     static final int COL_WEATHER_PRESSURE = 7;
     static final int COL_WEATHER_DESC = 8;
     static final int COL_WEATHER_WIND_SPEED = 9;
+    static final int COL_WEATHER_CONDITION_ID = 10;
+
     private String mForecast;
 
     TextView mDayView;
@@ -161,7 +166,9 @@ public class DetailFragment extends Fragment
                 data.getDouble(COL_WEATHER_MIN_TEMP), isMetric);
         mHighView.setText(highTemp);
         mLowView.setText(lowTemp);
-        mIcon.setImageResource(R.mipmap.ic_launcher);
+        // Read weather condition ID from cursor
+        int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
+        mIcon.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
         // Read humidity from cursor and update view
         float humitityValue = data.getFloat(COL_WEATHER_HUMIDITY);
         mHumidityView.setText(getActivity().getString(R.string.format_humidity, humitityValue));
@@ -186,4 +193,5 @@ public class DetailFragment extends Fragment
     public void onLoaderReset(android.support.v4.content.Loader<Cursor> loader) {
 
     }
+
 }
