@@ -138,8 +138,9 @@ public class DetailFragment extends Fragment
 
         Log.i(LOG_TAG, "In onCreateLoader");
         Intent intent = getActivity().getIntent();
-        if (intent == null)
+        if (intent == null || intent.getData() == null) {
             return null;
+        }
         return new CursorLoader(getContext(),
                                 intent.getData(),
                                 FORECAST_COLUMNS,
