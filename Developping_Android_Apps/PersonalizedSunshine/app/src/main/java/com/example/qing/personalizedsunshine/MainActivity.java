@@ -2,6 +2,7 @@ package com.example.qing.personalizedsunshine;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.database.Cursor;
 import android.net.Uri;
 import android.preference.PreferenceManager;
 import android.support.v7.app.AppCompatActivity;
@@ -9,11 +10,16 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.AdapterView;
+
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.ndk.CrashlyticsNdk;
+import com.example.qing.personalizedsunshine.data.WeatherContract;
+
 import io.fabric.sdk.android.Fabric;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements ForecastFragment.Callback{
 
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
     final String LOG_TAG = MainActivity.class.getSimpleName();
@@ -69,14 +75,20 @@ public class MainActivity extends AppCompatActivity {
         Log.i(LOG_TAG, "onResume is called");
         super.onResume();
         String locationInPref = Utility.getPreferredLocation(this);
-        if(mLocation != locationInPref){
-            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().
-                                findFragmentById(R.id.fragment_forecast);
-            ff.onLocationChanged();
+        // update the location in our second pane using the fragment manager
+        if (locationInPref != null && !locationInPref.equals(mLocation)) {
+            ForecastFragment ff = (ForecastFragment) getSupportFragmentManager().findFragmentById(R.id.fragment_forecast);
+            if (null != ff) { // one / two pane
+                ff.onLocationChanged();
+            }
+            DetailFragment df = (DetailFragment) getSupportFragmentManager().findFragmentByTag(DETAILFRAGMENT_TAG);
+            if (null != df) { // two pane
+                df.onLocationChanged(locationInPref);
+            }
+
             mLocation = locationInPref;
         }
     }
-
     @Override
     protected void onDestroy() {
         Log.i(LOG_TAG, "onDestroy is called");
@@ -121,6 +133,30 @@ public class MainActivity extends AppCompatActivity {
             startActivity(intent);
         }else {
             Log.i(LOG_TAG, "Couldn't call " + location + ", no receiving apps installed!");
+        }
+    }
+
+
+
+    @Override
+    public void onItemSelected(Uri contentUri) {
+        if(mTwoPane){
+            // In two-pane mode, show the detail view in this activity by
+            // adding or replacing the detail fragment using a fragment transaction
+            Bundle args = new Bundle();
+            args.putParcelable(DetailFragment.DETAIL_URI,contentUri);
+
+            DetailFragment fragment = new DetailFragment();
+            fragment.setArguments(args);
+
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.weather_detail_container, fragment, DETAILFRAGMENT_TAG)
+                    .commit();
+
+        }else {
+            Intent intent = new Intent(this, DetailActivity.class)
+                    .setData(contentUri);
+            startActivity(intent);
         }
     }
 }

@@ -31,9 +31,23 @@ import com.example.qing.personalizedsunshine.data.WeatherContract;
  * Created by qingpan on 11/11/2016.
  */
 
+
 public class  ForecastFragment extends Fragment
                                 implements LoaderManager.LoaderCallbacks<Cursor>
 {
+    /**
+     * A callback interface that all activities containing this fragment must
+     * implement. This mechanism allows activities to be notified of item
+     * selections.
+     */
+    public interface Callback {
+        /**
+         * DetailFragmentCallback for when an item has been selected.
+         */
+        public void onItemSelected(Uri dateUri);
+    }
+
+
     private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
     public ForecastAdapter mForecastAdapter;
@@ -119,7 +133,9 @@ public class  ForecastFragment extends Fragment
                             .setData(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
                                     locationSetting, cursor.getLong(COL_WEATHER_DATE)
                             ));
-                    startActivity(intent);
+                    ((Callback)getActivity()).onItemSelected(WeatherContract.WeatherEntry.buildWeatherLocationWithDate(
+                            locationSetting, cursor.getLong(COL_WEATHER_DATE)
+                    ));
                 }
             }
         });

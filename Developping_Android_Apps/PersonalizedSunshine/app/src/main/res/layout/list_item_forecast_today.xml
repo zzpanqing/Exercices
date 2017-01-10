@@ -16,19 +16,16 @@
         android:layout_gravity="center_horizontal">
 
         <TextView
-            android:text="TODAY, JUNE 24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_date_textview"/>
 
         <TextView
-            android:text="21°"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_high_textview"/>
 
         <TextView
-            android:text="8°"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_low_textview"
@@ -51,7 +48,6 @@
             android:layout_weight="1"/>
 
         <TextView
-            android:text="TextView"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/list_item_forecast_textview"

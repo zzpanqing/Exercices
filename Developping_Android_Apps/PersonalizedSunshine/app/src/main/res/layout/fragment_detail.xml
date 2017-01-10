@@ -14,13 +14,11 @@
         android:padding="16dp">
 
         <TextView
-            android:text="Tomorrow"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_day_textview" />
 
         <TextView
-            android:text="Juin 24"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_date_textview" />
@@ -36,13 +34,11 @@
                 android:layout_height="wrap_content"
                 android:orientation="vertical">
                 <TextView
-                    android:text="21"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_high_textview"/>
 
                 <TextView
-                    android:text="11"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:id="@+id/detail_low_textview"/>
@@ -57,27 +53,23 @@
                 <ImageView
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    app:srcCompat="@mipmap/ic_launcher"
                     android:id="@+id/detail_icon"
                     />
                 <TextView
                     android:id="@+id/detail_forecast_textview"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="Clear"/>
+                    android:layout_height="wrap_content"/>
             </LinearLayout>
         </LinearLayout>
 
 
         <TextView
-            android:text="48%"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_humidity_textview"
             />
 
         <TextView
-            android:text="6 km/h NW"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:id="@+id/detail_wind_textview" />
@@ -86,7 +78,7 @@
             android:id="@+id/detail_pressure_textview"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="1014" />
+             />
     </LinearLayout>
 
 
