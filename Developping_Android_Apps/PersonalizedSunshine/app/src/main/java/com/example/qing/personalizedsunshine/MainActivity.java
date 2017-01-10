@@ -52,6 +52,7 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         }
     }
 
+
     @Override
     protected void onStart() {
         Log.v(LOG_TAG, "onStart is called");
