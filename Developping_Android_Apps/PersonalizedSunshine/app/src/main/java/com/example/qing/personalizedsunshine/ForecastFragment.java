@@ -38,6 +38,14 @@ public class  ForecastFragment extends Fragment
     private static final String SELECTED_KEY = "selected_position";
     private int mPosition = ListView.INVALID_POSITION;
     ListView mListView;
+    private boolean mUseTodayLayout;
+
+    public void setUseTodayLayout(boolean iUseTodayLayout) {
+        mUseTodayLayout = iUseTodayLayout;
+        if(mForecastAdapter != null)
+            mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
+    }
+
     /**
      * A callback interface that all activities containing this fragment must
      * implement. This mechanism allows activities to be notified of item
@@ -117,6 +125,7 @@ public class  ForecastFragment extends Fragment
         // However, we cannot use FLAG_AUTO_REQUERY since it is deprecated, so we will end
         // up with an empty list the first time we run.
         mForecastAdapter = new ForecastAdapter(getActivity(), cur, 0);
+        mForecastAdapter.setUseTodayLayout(mUseTodayLayout);
 
         View rootView = inflater.inflate(R.layout.fragment_main, container, false);
 

@@ -23,6 +23,12 @@ public class ForecastAdapter extends CursorAdapter {
     private static final int VIEW_TYPE_TODAY = 0;
     private static final int VIEW_TYPE_FUTURE_DAY = 1;
 
+    public void setUseTodayLayout(boolean iMUseTodayLayout) {
+        mUseTodayLayout = iMUseTodayLayout;
+    }
+
+    private boolean mUseTodayLayout = true;
+
     public static class ViewHolder{
         public final ImageView iconView;
         public final TextView dateView;
@@ -50,7 +56,7 @@ public class ForecastAdapter extends CursorAdapter {
 
     @Override
     public int getItemViewType(int position) {
-        return (position == 0)? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
+        return (position == 0 && mUseTodayLayout)? VIEW_TYPE_TODAY : VIEW_TYPE_FUTURE_DAY;
     }
 
     /**
