@@ -178,6 +178,7 @@ public class DetailFragment extends Fragment
         // Read weather condition ID from cursor
         int weatherId = data.getInt(COL_WEATHER_CONDITION_ID);
         mIcon.setImageResource(Utility.getArtResourceForWeatherCondition(weatherId));
+        mIcon.setContentDescription(weatherDescription);
         // Read humidity from cursor and update view
         float humitityValue = data.getFloat(COL_WEATHER_HUMIDITY);
         mHumidityView.setText(getActivity().getString(R.string.format_humidity, humitityValue));
