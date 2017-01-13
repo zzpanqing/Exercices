@@ -118,6 +118,11 @@
             android:layout_marginTop="2dp"
             android:textSize="22sp"
              />
+
+        <com.example.qing.personalizedsunshine.MyView
+            android:layout_width="100dp"
+            android:layout_height="100dp"
+            android:layout_gravity="center_horizontal"/>
     </LinearLayout>
 
 
