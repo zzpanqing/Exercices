@@ -26,6 +26,7 @@ import android.widget.ListView;
 import android.widget.Toast;
 
 import com.example.qing.personalizedsunshine.data.WeatherContract;
+import com.example.qing.personalizedsunshine.service.SunshineService;
 
 /**
  * Created by qingpan on 11/11/2016.
@@ -185,8 +186,12 @@ public class  ForecastFragment extends Fragment
                     getString(R.string.pref_location_key),
                     getString(R.string.pref_location_default));
 
-            AsyncTask<String, Void, Void> fetchWeather = new FetchWeatherTask(getContext());
-            fetchWeather.execute(location);
+            //AsyncTask<String, Void, Void> fetchWeather = new FetchWeatherTask(getContext());
+            //fetchWeather.execute(location);
+            Intent intent = new Intent(getActivity(), SunshineService.class);
+            intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
+                    Utility.getPreferredLocation(getActivity()));
+            getActivity().startService(intent);
         }
         else {
             if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
