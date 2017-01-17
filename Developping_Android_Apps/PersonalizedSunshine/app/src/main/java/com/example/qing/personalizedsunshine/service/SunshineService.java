@@ -1,8 +1,10 @@
 package com.example.qing.personalizedsunshine.service;
 
 import android.app.IntentService;
+import android.content.BroadcastReceiver;
 import android.content.ContentUris;
 import android.content.ContentValues;
+import android.content.Context;
 import android.content.Intent;
 import android.database.Cursor;
 import android.net.Uri;
@@ -10,6 +12,7 @@ import android.text.format.Time;
 import android.util.Log;
 
 import com.example.qing.personalizedsunshine.BuildConfig;
+import com.example.qing.personalizedsunshine.Utility;
 import com.example.qing.personalizedsunshine.data.WeatherContract;
 
 import org.json.JSONArray;
@@ -307,6 +310,16 @@ public class SunshineService extends IntentService {
         } catch (JSONException e) {
             Log.e(LOG_TAG, e.getMessage(), e);
             e.printStackTrace();
+        }
+    }
+
+    static public class AlarmReceiver extends BroadcastReceiver{
+
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Intent sendIntent = new Intent(context, SunshineService.class);
+            sendIntent.putExtra(LOCATION_QUERY_EXTRA, intent.getStringExtra(LOCATION_QUERY_EXTRA));
+            context.startService(sendIntent);
         }
     }
 }

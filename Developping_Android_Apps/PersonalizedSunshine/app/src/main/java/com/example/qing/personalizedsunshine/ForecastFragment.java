@@ -1,5 +1,8 @@
 package com.example.qing.personalizedsunshine;
 import android.Manifest;
+import android.app.AlarmManager;
+import android.app.PendingIntent;
+import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
@@ -7,6 +10,7 @@ import android.database.Cursor;
 import android.net.Uri;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.SystemClock;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
@@ -60,7 +64,6 @@ public class  ForecastFragment extends Fragment
     }
 
 
-    private final String LOG_TAG = FetchWeatherTask.class.getSimpleName();
 
     public ForecastAdapter mForecastAdapter;
     final int MY_PERMISSIONS_REQUEST_INTERNET = 111;
@@ -181,17 +184,15 @@ public class  ForecastFragment extends Fragment
         int permissionCheck = ContextCompat.checkSelfPermission(  getActivity(),
                                              Manifest.permission.INTERNET);
         if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
-            SharedPreferences sharedPref = PreferenceManager.getDefaultSharedPreferences(getContext());
-            String location = sharedPref.getString(
-                    getString(R.string.pref_location_key),
-                    getString(R.string.pref_location_default));
 
-            //AsyncTask<String, Void, Void> fetchWeather = new FetchWeatherTask(getContext());
-            //fetchWeather.execute(location);
-            Intent intent = new Intent(getActivity(), SunshineService.class);
-            intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA,
-                    Utility.getPreferredLocation(getActivity()));
-            getActivity().startService(intent);
+            AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+            Intent intent =      new Intent(getContext(), SunshineService.AlarmReceiver.class);
+            intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
+            PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+            alarmManager.set(AlarmManager.RTC_WAKEUP,
+                    System.currentTimeMillis()+5000/*5s later*/,
+                    alarmIntent);
+
         }
         else {
             if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
