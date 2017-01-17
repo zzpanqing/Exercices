@@ -119,4 +119,6 @@
     <string name="format_wind_mph">Wind: <xliff:g id="speed">%1$1.0f</xliff:g> mph <xliff:g id="direction">%2$s</xliff:g></string>
     <string name="format_pressure">Pressure: <xliff:g id="pressure">%1.0f</xliff:g> hPa</string>
 
+    <string name="sync_account_type">customizedSunshine.example.com</string>
+    <string name="content_authority">com.example.android.customizedSunshine.app</string>
 </resources>
