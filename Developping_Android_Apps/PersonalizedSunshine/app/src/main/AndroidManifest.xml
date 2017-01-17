@@ -66,8 +66,6 @@ android:syncable="true" mean that this content provider will be synced with a se
     <meta-data
             android:name="io.fabric.ApiKey"
             android:value="1e479fa51df47d195e0c1a69a611d0006923215b" />
-        <service android:name=".service.SunshineService"/>
-        <receiver android:name=".service.SunshineService$AlarmReceiver" android:enabled="true"/>
 
 
         <!-- SyncAdapter's dummy authentication service -->
