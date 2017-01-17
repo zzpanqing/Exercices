@@ -32,6 +32,8 @@ import android.widget.Toast;
 import com.example.qing.personalizedsunshine.data.WeatherContract;
 import com.example.qing.personalizedsunshine.service.SunshineService;
 
+import static com.example.qing.personalizedsunshine.sync.SunshineSyncAdapter.syncImmediately;
+
 /**
  * Created by qingpan on 11/11/2016.
  */
@@ -40,10 +42,16 @@ import com.example.qing.personalizedsunshine.service.SunshineService;
 public class  ForecastFragment extends Fragment
                                 implements LoaderManager.LoaderCallbacks<Cursor>
 {
+// constants
     private static final String SELECTED_KEY = "selected_position";
+    private static final int MY_PERMISSIONS_REQUEST_INTERNET = 111;
+    private static final int MY_PERMISSIONS_REQUEST_WRITE_SETTINGS = 112;
+    private static final int FORECAST_LOADER = 0; // loader ID must be unique for every loader used in activity
+
     private int mPosition = ListView.INVALID_POSITION;
     ListView mListView;
     private boolean mUseTodayLayout;
+    public ForecastAdapter mForecastAdapter;
 
     public void setUseTodayLayout(boolean iUseTodayLayout) {
         mUseTodayLayout = iUseTodayLayout;
@@ -65,9 +73,6 @@ public class  ForecastFragment extends Fragment
 
 
 
-    public ForecastAdapter mForecastAdapter;
-    final int MY_PERMISSIONS_REQUEST_INTERNET = 111;
-    private static final int FORECAST_LOADER = 0; // loader ID must be unique for every loader used in activity
 
 
      static final String[] FORECAST_COLUMNS = {
@@ -181,34 +186,38 @@ public class  ForecastFragment extends Fragment
 
 
     private void updateWeather() {
-        int permissionCheck = ContextCompat.checkSelfPermission(  getActivity(),
+        int permissionCheckInternet = ContextCompat.checkSelfPermission(  getActivity(),
                                              Manifest.permission.INTERNET);
-        if(permissionCheck == PackageManager.PERMISSION_GRANTED) {
 
-            AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
-            Intent intent =      new Intent(getContext(), SunshineService.AlarmReceiver.class);
-            intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
-            PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
-            alarmManager.set(AlarmManager.RTC_WAKEUP,
-                    System.currentTimeMillis()+5000/*5s later*/,
-                    alarmIntent);
+        if(permissionCheckInternet == PackageManager.PERMISSION_GRANTED ) {
 
+//            AlarmManager alarmManager = (AlarmManager)getContext().getSystemService(Context.ALARM_SERVICE);
+//            Intent intent =      new Intent(getContext(), SunshineService.AlarmReceiver.class);
+//            intent.putExtra(SunshineService.LOCATION_QUERY_EXTRA, Utility.getPreferredLocation(getActivity()));
+//            PendingIntent alarmIntent = PendingIntent.getBroadcast(getContext(), 0, intent, PendingIntent.FLAG_ONE_SHOT);
+//            alarmManager.set(AlarmManager.RTC_WAKEUP,
+//                    System.currentTimeMillis()+5000/*5s later*/,
+//                    alarmIntent);
+            syncImmediately(getContext());
         }
         else {
-            if(ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
-                    Manifest.permission.INTERNET)){
-                // Show an explanation to the user *asynchronously* -- don't block
-                // this thread waiting for the user's response! After the user
-                // sees the explanation, try again to request the permission.
-            } else {
-                // No explanation needed, we can request the permission.
-                ActivityCompat.requestPermissions(getActivity(),
-                        new String [] {Manifest.permission.INTERNET},
-                        MY_PERMISSIONS_REQUEST_INTERNET);
-                // MY_PERMISSIONS_REQUEST_INTERNET is an
-                // app-defined int constant. The callback method gets the
-                // result of the request.
+            if (permissionCheckInternet != PackageManager.PERMISSION_GRANTED) {
+                if (ActivityCompat.shouldShowRequestPermissionRationale(getActivity(),
+                        Manifest.permission.INTERNET)) {
+                    // Show an explanation to the user *asynchronously* -- don't block
+                    // this thread waiting for the user's response! After the user
+                    // sees the explanation, try again to request the permission.
+                } else {
+                    // No explanation needed, we can request the permission.
+                    ActivityCompat.requestPermissions(getActivity(),
+                            new String[]{Manifest.permission.INTERNET},
+                            MY_PERMISSIONS_REQUEST_INTERNET);
+                    // MY_PERMISSIONS_REQUEST_INTERNET is an
+                    // app-defined int constant. The callback method gets the
+                    // result of the request.
+                }
             }
+
         }
     }
 
