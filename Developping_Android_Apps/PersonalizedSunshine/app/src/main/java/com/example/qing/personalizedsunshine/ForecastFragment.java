@@ -1,15 +1,19 @@
 package com.example.qing.personalizedsunshine;
 import android.Manifest;
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.database.Cursor;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.ContextCompat;
 import android.support.v4.content.CursorLoader;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -36,6 +40,7 @@ public class  ForecastFragment extends Fragment
     private static final int MY_PERMISSIONS_REQUEST_INTERNET = 111;
     private static final int MY_PERMISSIONS_REQUEST_WRITE_SETTINGS = 112;
     private static final int FORECAST_LOADER = 0; // loader ID must be unique for every loader used in activity
+    private static final String LOG_TAG = ForecastFragment.class.getName();
 
     private int mPosition = ListView.INVALID_POSITION;
     ListView mListView;
@@ -165,8 +170,8 @@ public class  ForecastFragment extends Fragment
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
             switch (item.getItemId()){
-                case R.id.action_refresh:
-                    updateWeather();
+                case R.id.action_locate_on_map:
+                    openPreferredLocationInMap();
                     return true;
             }
         return super.onOptionsItemSelected(item);
@@ -286,5 +291,29 @@ public class  ForecastFragment extends Fragment
         getLoaderManager().restartLoader(FORECAST_LOADER, null, this);
     }
 
+    private void openPreferredLocationInMap() {
+        // Using the URI scheme for showing a location found on a map.  This super-handy
+        // intent can is detailed in the "Common Intents" page of Android's developer site:
+        // http://developer.android.com/guide/components/intents-common.html#Maps
+        if ( null != mForecastAdapter ) {
+            Cursor c = mForecastAdapter.getCursor();
+            if ( null != c ) {
+                c.moveToPosition(0);
+                String posLat = c.getString(COL_COORD_LAT);
+                String posLong = c.getString(COL_COORD_LONG);
+                Uri geoLocation = Uri.parse("geo:" + posLat + "," + posLong);
+
+                Intent intent = new Intent(Intent.ACTION_VIEW);
+                intent.setData(geoLocation);
+
+                if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                    startActivity(intent);
+                } else {
+                    Log.d(LOG_TAG, "Couldn't call " + geoLocation.toString() + ", no receiving apps installed!");
+                }
+            }
+
+        }
+    }
 
 }
