@@ -16,6 +16,7 @@ import android.widget.AdapterView;
 import com.crashlytics.android.Crashlytics;
 import com.crashlytics.android.ndk.CrashlyticsNdk;
 import com.example.qing.personalizedsunshine.data.WeatherContract;
+import com.example.qing.personalizedsunshine.sync.SunshineSyncAdapter;
 
 import io.fabric.sdk.android.Fabric;
 
@@ -54,6 +55,8 @@ public class MainActivity extends AppCompatActivity implements ForecastFragment.
         ForecastFragment forecastFragment = (ForecastFragment)(getSupportFragmentManager()
                 .findFragmentById(R.id.fragment_forecast));
         forecastFragment.setUseTodayLayout(!mTwoPane);
+
+        SunshineSyncAdapter.initializeSyncAdapter(this);
     }
 
 

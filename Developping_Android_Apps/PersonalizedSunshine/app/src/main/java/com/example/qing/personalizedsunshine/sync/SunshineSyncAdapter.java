@@ -38,6 +38,10 @@ import java.util.Vector;
 
 public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     private static final String LOCATION_QUERY_EXTRA = "lqe";
+    // Interval at which to sync with the weather, in milliseconds.
+    // 60 seconds (1 minute)  180 = 3 hours
+    public static final int SYNC_INTERVAL = 1000*60*180;
+    public static final int SYNC_FLEXTIME = SYNC_INTERVAL/3;
     public final String LOG_TAG = SunshineSyncAdapter.class.getSimpleName();
 
     public SunshineSyncAdapter(Context context, boolean autoInitialize) {
@@ -47,6 +51,7 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
     @Override
     public void onPerformSync(Account account, Bundle extras, String authority, ContentProviderClient provider, SyncResult syncResult) {
 
+        Log.d(LOG_TAG, "onPerformSync is called");
         // If there's no zip code, there's nothing to look up.  Verify size of params.
         String location= Utility.getPreferredLocation(getContext());
 
@@ -179,6 +184,8 @@ public class SunshineSyncAdapter extends AbstractThreadedSyncAdapter {
              * then call ContentResolver.setIsSyncable(account, AUTHORITY, 1)
              * here.
              */
+
+            onAccountCreated(newAccount, context);
 
         }
         return newAccount;
