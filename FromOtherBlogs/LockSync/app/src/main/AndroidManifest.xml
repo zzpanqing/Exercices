@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+          package="com.qing.testjobbole">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity android:name=".MainActivity">
+            <intent-filter>
+                <!--intent filter should contain at least one action can contain
+                 more than one action, otherwise no intent request can match
+                 with this intent filter-->
+                <action android:name="android.intent.action.MAIN" />
+                <!--android.intent.action.MAIN make this activity the first
+                activity launched by app-->
+                <category android:name="android.intent.category.LAUNCHER" />
+                <!--android.intent.category.LAUNCHER make this activity's
+                icon show in the app list or on the desktop
+                if several activity have android.intent.category.LAUNCHER
+                there will be several icon shown in the app list-->
+            </intent-filter>
+        </activity>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="1e479fa51df47d195e0c1a69a611d0006923215b" />
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
