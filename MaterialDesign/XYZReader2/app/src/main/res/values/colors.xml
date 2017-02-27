@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+
+    <color name="pink">#E91E63</color>
+
+    <color name="cyan">#00BCD4</color>
+    <color name="cyan_dark">#0097A7</color>
+    <color name="grey_dark">#6000</color>
+</resources>
