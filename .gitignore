@@ -1,2 +1,5 @@
 *.swp
-/Architecture/TodoMVP/.idea/
+*.iml
+.idea/
+.gradle/
+build/
