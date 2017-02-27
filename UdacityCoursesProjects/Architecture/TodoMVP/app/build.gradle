@@ -1,0 +1,64 @@
+apply plugin: 'com.android.application'
+
+android {
+    compileSdkVersion 25
+    buildToolsVersion "25.0.2"
+    defaultConfig {
+        applicationId 'com.qing.architect.google.todomvp.todomvp'
+        minSdkVersion 15
+        targetSdkVersion 25
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+        }
+    }
+    productFlavors {
+        mock {
+            applicationIdSuffix = ".mock"
+        }
+        prod {
+        }
+    }
+
+}
+
+dependencies {
+    compile fileTree(include: ['*.jar'], dir: 'libs')
+
+    compile 'com.android.support:appcompat-v7:25.1.1'
+    testCompile 'junit:junit:4.12'
+    compile 'com.android.support:design:25.1.1'
+    // don't use gouva 21 which support only java 8
+    // gouva 22 will support java 6
+    compile 'com.google.guava:guava:20.0'
+    compile "com.android.support.test.espresso:espresso-idling-resource:2.2.2"
+
+
+    // Espresso UI Testing
+//    androidTestCompile ("com.android.support.test.espresso:espresso-contrib:2.2.2",{
+//        exclude group: 'com.android.support', module: 'recyclerview-v7'
+//        exclude group: 'com.android.support', module: 'appcompat-v7'
+//        exclude group: 'com.android.support', module: 'support-v4'
+//        exclude group: 'com.android.support', module: 'design'
+//
+//    })
+//    androidTestCompile ("com.android.support.test.espresso:espresso-intents:2.2.2", {
+//
+//    })
+//    androidTestCompile('com.android.support.test.espresso:espresso-core:2.2.2', {
+//        exclude group: 'com.android.support', module: 'support-annotations'
+//        exclude group: 'com.android.support', module: 'appcompat-v7'
+//    })
+
+    androidTestCompile 'com.android.support.test.espresso:espresso-contrib:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-intents:2.2.2'
+    androidTestCompile 'com.android.support.test.espresso:espresso-core:2.2.2'
+    androidTestCompile 'com.android.support:appcompat-v7:25.1.1'
+    androidTestCompile 'com.android.support:recyclerview-v7:25.1.1'
+    androidTestCompile 'com.android.support:design:25.1.1'
+}

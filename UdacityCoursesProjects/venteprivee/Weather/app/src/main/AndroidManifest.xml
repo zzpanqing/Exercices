@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest package="com.pan.weather"
+          xmlns:android="http://schemas.android.com/apk/res/android">
+
+    <application
+        android:allowBackup="true"
+        android:icon="@mipmap/ic_launcher"
+        android:label="@string/app_name"
+        android:supportsRtl="true"
+        android:theme="@style/AppTheme">
+        <activity
+            android:name=".ForecastActivity"
+            android:label="@string/paris_weather"
+            android:theme="@style/ForecastTheme"
+            android:launchMode="singleTop">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+
+        <activity
+            android:name=".DetailActivity"
+            android:label="@string/activity_detail_label"
+            android:parentActivityName=".ForecastActivity"
+            >
+            <meta-data
+                android:name="android.support.PARENT_ACTIVITY"
+                android:value=".ForecastActivity" />
+        </activity>
+        <provider
+            android:authorities="com.pan.weather.app"
+            android:name=".data.WeatherProvider"
+            android:exported="true"
+            android:permission="ccom.pan.weather.LICENSE_TO_KILL"/>
+        <meta-data
+            android:name="io.fabric.ApiKey"
+            android:value="1e479fa51df47d195e0c1a69a611d0006923215b" />
+    </application>
+
+    <uses-permission android:name="android.permission.INTERNET" />
+</manifest>
